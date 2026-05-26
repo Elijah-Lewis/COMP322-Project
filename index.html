@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title> 
+    <link rel="stylesheet" href="styling.css">
+    <script src="websiteScripts.js"></script>
+</head>
+<body class="background">
+    <h1 class="h1">Agri-tech Website</h1>
+    <p class="p">Welcome to your website for managing your plants</p>
+    <h2 class="h2">Plants</h2>
+    <table class="table" border="5">
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Date Planted</th>
+            <th>Watering Schedule</th>
+            <th>Harvest Yield</th>
+        </tr>
+        <tr>
+            <td>Tomato</td>
+            <td>Vegetable</td>
+            <td>2023-10-01</td>
+            <td>Every 2 days</td>
+            <td>10 bu/acre</td>
+        </tr>   
+        <tr>
+            <td>Basil</td>
+            <td>Herb</td>
+            <td>2023-10-02</td>
+            <td>Every 3 days</td>
+            <td>5 bu/acre</td>
+        </tr>
+    </table>
+
+<div class="button-row">
+        <button onclick="addPlantInfo()">Add Plant Information</button>
+        <button onclick="editPlantInfo()">Edit Plant Information</button>
+        <button onclick="deletePlantInfo()">Delete Plant Information</button>
+</div>
+<br>
+<!-- break to split up content -->
+<h1 class="h1">Weather Predictions</h1>
+</body>
