@@ -1,32 +1,26 @@
-.background {
+body {
   background-size: cover;
   background-position: center;
-  height: 100vh; /* Full viewport height */
-  background: "yellow";
+  min-height: 100vh;
+  background-color: rgb(137, 137, 137);
+  margin: 20px;
 }
 
-.button-row{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Creates 3 equal columns */
-  gap: 10px; /* Optional: adds space between buttons */
-  justify-content: center; /* Centers horizontally (main axis) */
-  align-items: center;     /* Centers vertically (cross axis) */
+header, section, h1{
+  text-align: center;
 }
 
-.parent {
+.button-row {
   display: flex;
-  height: 100vh;
-}
-
-.child {
-  margin: auto; /* Centers the item perfectly in both directions */
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
 }
 
 .table {
-  font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
-  border: 1px solid #dddddd;
+  margin-top: 15px;
 }
 
 .table td, .table th {
@@ -35,28 +29,18 @@
   padding: 8px;
 }
 
-.table th{
-    background-color: #fb7777;
+.table th {
+    background-color: #b1b1b1;
 }
 
 .table tr:nth-child(even) {
   background-color: #dddddd;
 }
 
-.h2{
-    text-align: center;
-}
-
-.p{
-    text-align: center;
-}
-
-.h1{
-    text-align: center;
-}
-
-.button {
-  display: block;
-  margin: 0 auto; /* Centers the button horizontally */
-  padding: 10px 20px;
+.delete-btn {
+  background-color: #4a4a4a;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
 }
