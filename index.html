@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agri-Tech Plant Manager</title> 
+    <link rel="stylesheet" href="styling.css">
+    <script src="websiteScripts.js" defer></script>
+</head>
+<body class="background">
+    <header>
+        <h1>Agri-tech Website</h1>
+        <p>Welcome to your website for managing your plants</p>
+    </header>
+
+    <!-- break to split up content -->
+    <hr>
+    
+    <main>
+        <section aria-label="Plant Information">
+            <h2 id="plants-heading">Plants</h2>
+            <table class="table" border="5">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Date Planted</th>
+                        <th>Watering Schedule</th>
+                        <th>Harvest Yield</th>
+                    </tr>
+                </thead>
+                <tbody id="plant-table-body">
+                    <tr>
+                        <td>Tomato</td>
+                        <td>Vegetable</td>
+                        <td>2023-10-01</td>
+                        <td>Every 2 days</td>
+                        <td>10 bu/acre</td>
+                    </tr>   
+                    <tr>
+                        <td>Basil</td>
+                        <td>Herb</td>
+                        <td>2023-10-02</td>
+                        <td>Every 3 days</td>
+                        <td>5 bu/acre</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="button-row">
+                <button type="button" onclick="addPlantInfo()">Add Plant Information</button>
+                <button type="button" onclick="editPlantInfo()">Edit Plant Information</button>
+            </div>
+        </section>
+
+        <!-- break to split up content -->
+        <hr>
+        <h1 class="h1">Weather Predictions</h1>
+    </main>
+    <br>
+
+</body>
