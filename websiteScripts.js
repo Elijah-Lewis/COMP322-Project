@@ -1,12 +1,10 @@
-// 1. Core State Application: Array of plant objects
 let plants = [];
 
-// 2. Initialize application on DOM load
+// 2. Start application on DOM load
 document.addEventListener('DOMContentLoaded', () => {
     loadPlantsFromStorage();
     renderTable();
 
-    // Event Listener for the add button
     document.getElementById('add-plant-btn').addEventListener('click', addPlantInfo);
 });
 
