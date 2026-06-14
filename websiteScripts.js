@@ -1,84 +1,137 @@
-let plants = [];
+//alert the user when a button is clicked
+function onClick(buttonName){
+    alert(`You clicked the \"${buttonName}\" button!`);
+}
 
-// 2. Start application on DOM load
-document.addEventListener('DOMContentLoaded', () => {
-    loadPlantsFromStorage();
-    renderTable();
+//delete the plant info from the table and server
+function deletePlantInfo(){
+    alert("You clicked the \"Delete Plant Information\" button!");
 
-    document.getElementById('add-plant-btn').addEventListener('click', addPlantInfo);
-});
-
-// 3. Load data from localStorage
-function loadPlantsFromStorage() {
-    const storedPlants = localStorage.getItem('plantsData');
-    if (storedPlants) {
-        plants = JSON.parse(storedPlants);
-    } else {
-        // Default seed data if local storage is empty
-        plants = [
-            { id: 1, name: 'Tomato', type: 'Vegetable', date: '2023-10-01', schedule: 'Every 2 days', yield: '10 bu/acre' },
-            { id: 2, name: 'Basil', type: 'Herb', date: '2023-10-02', schedule: 'Every 3 days', yield: '5 bu/acre' }
-        ];
-        savePlantsToStorage();
+    //If the plant isn't selected, alert user
+    const selectedRadio = document.querySelector('input[name="plantSelect"]:checked');
+    if (!selectedRadio) {
+        alert("Please select a plant from the table first using the radio buttons.");
+        return;
     }
+
+    //find name of selected plant
+    const targetName = selectedRadio.value;
+    fetch('/api/plants', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ targetName: targetName })
+    })
+    .then(response => {
+        //if plant not found in server, throw an error
+        if (!response.ok) throw new Error('Plant not found on server');
+        return response.json();
+    })
+    .then(() => {
+        // Reload the table automatically
+        fetchPlants();
+    })
+    .catch(error => alert(error.message));
 }
 
-// 4. Save data to localStorage
-function savePlantsToStorage() {
-    localStorage.setItem('plantsData', JSON.stringify(plants));
+
+//edit the plant information within the table and update the server
+function editPlantInfo(){
+    alert("You clicked the \"Edit Plant Information\" button!");
+
+    //if the plant is selected, let user edit plant info
+    const selectedRadio = document.querySelector('input[name="plantSelect"]:checked');
+    if (!selectedRadio) {
+        alert("Please select a plant from the table first using the radio buttons.");
+        return;
+    }
+
+    const targetName = selectedRadio.value;
+    const updatedType = prompt(`Enter the new plant type for "${targetName}":`);
+    if (!updatedType) return;
+
+    fetch('/api/plants', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ targetName: targetName, updatedType: updatedType })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Plant not found on server');
+        return response.json();
+    })
+    .then(() => {
+        fetchPlants(); // Reload the table automatically
+    })
+    .catch(error => alert(error.message));
 }
 
-// 5. DOM Manipulation: Render state data to the table UI
-function renderTable() {
-    const tableBody = document.getElementById('plant-table-body');
-    tableBody.innerHTML = ''; // Clear existing rows
+//add new plants into table and save to server
+function addPlantInfo(){
+    alert("You clicked the \"Add Plant Information\" button!");
 
+    //get new plant information from user
+    const name = prompt("Enter plant name:");
+    const type = prompt("Enter plant type:");
+    const wateringSchedule = prompt("Enter watering schedule:");
+    const harvestYield = prompt("Enter harvest yield:");
+
+    if (!name || !type || !wateringSchedule || !harvestYield) return;
+    const newPlantData = {
+        name: name,
+        type: type,
+        datePlanted: new Date().toISOString().split('T')[0],
+        wateringSchedule: wateringSchedule,
+        harvestYield: harvestYield
+    };
+
+    fetch('/api/plants', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newPlantData)
+    })
+    .then(response => response.json())
+    .then(() => {
+        fetchPlants(); 
+    })
+    .catch(error => console.error('Error saving plant:', error));
+}
+
+//fetch plants w/ api
+function fetchPlants() {
+    fetch('/api/plants')
+        .then(response => response.json())
+        .then(data => {
+            renderTable(data);
+        })
+        .catch(error => console.error('Error fetching plants:', error));
+}
+
+function renderTable(plants) {
+    const table = document.getElementById("plantTable");
+    if (!table) return;
+
+    table.innerHTML = `
+        <tr>
+            <th>Select</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Date Planted</th>
+            <th>Watering Schedule</th>
+            <th>Harvest Yield</th>
+        </tr>`;
+
+    //add plant info for each plant in table
     plants.forEach(plant => {
         const row = document.createElement('tr');
-        
         row.innerHTML = `
+            <td><input type="radio" name="plantSelect" value="${plant.name}"></td>
             <td>${plant.name}</td>
             <td>${plant.type}</td>
-            <td>${plant.date}</td>
-            <td>${plant.schedule}</td>
-            <td>${plant.yield}</td>
-            <td>
-                <button class="delete-btn" onclick="deletePlantInfo(${plant.id})">Delete</button>
-            </td>
+            <td>${plant.datePlanted || 'N/A'}</td>
+            <td>${plant.wateringSchedule || 'N/A'}</td>
+            <td>${plant.harvestYield || 'N/A'}</td>
         `;
-        
-        tableBody.appendChild(row);
+        table.appendChild(row);
     });
 }
 
-// 6. Capture Input & Update State (Add)
-function addPlantInfo() {
-    const name = prompt("Enter Plant Name:");
-    if (!name) return; // Exit if cancelled
-
-    const type = prompt("Enter Plant Type:");
-    const date = prompt("Enter Date Planted (YYYY-MM-DD):");
-    const schedule = prompt("Enter Watering Schedule:");
-    const harvestYield = prompt("Enter Harvest Yield:");
-
-    const newPlant = {
-        id: Date.now(), // Unique ID for targeting deletions
-        name,
-        type,
-        date,
-        schedule,
-        yield: harvestYield
-    };
-
-    plants.push(newPlant);
-    savePlantsToStorage();
-    renderTable();
-}
-
-// 7. Update State & UI (Delete)
-function deletePlantInfo(id) {
-    // Filter out the plant with the targeted ID
-    plants = plants.filter(plant => plant.id !== id);
-    savePlantsToStorage();
-    renderTable();
-}
+window.onload = fetchPlants;

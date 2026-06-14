@@ -19,37 +19,20 @@
     <main>
         <section aria-label="Plant Information">
             <h2 id="plants-heading">Plants</h2>
-            <table class="table" border="5">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Date Planted</th>
-                        <th>Watering Schedule</th>
-                        <th>Harvest Yield</th>
-                    </tr>
-                </thead>
-                <tbody id="plant-table-body">
-                    <tr>
-                        <td>Tomato</td>
-                        <td>Vegetable</td>
-                        <td>2023-10-01</td>
-                        <td>Every 2 days</td>
-                        <td>10 bu/acre</td>
-                    </tr>   
-                    <tr>
-                        <td>Basil</td>
-                        <td>Herb</td>
-                        <td>2023-10-02</td>
-                        <td>Every 3 days</td>
-                        <td>5 bu/acre</td>
-                    </tr>
-                </tbody>
+            <table id="plantTable" class="table" border="5">
+                <tr>
+                    <th>Select</th> <th>Name</th>
+                    <th>Type</th>
+                    <th>Date Planted</th>
+                    <th>Watering Schedule</th>
+                    <th>Harvest Yield</th>
+                </tr>
             </table>
 
             <div class="button-row">
                 <button type="button" onclick="addPlantInfo()">Add Plant Information</button>
                 <button type="button" onclick="editPlantInfo()">Edit Plant Information</button>
+                <button type="button" onclick="deletePlantInfo()">Delete Plant Information</button>
             </div>
         </section>
 
