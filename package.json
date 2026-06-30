@@ -19,6 +19,13 @@
   },
   "homepage": "https://github.com/Elijah-Lewis/COMP322-Project#readme",
   "dependencies": {
-    "express": "^5.2.1"
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "express": "^5.2.1",
+    "pg": "^8.22.0"
+  },
+  "devDependencies": {
+    "dotenv": "^17.4.2",
+    "prisma": "^7.8.0"
   }
 }

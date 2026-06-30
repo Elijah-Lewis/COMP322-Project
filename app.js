@@ -1,55 +1,103 @@
+//set up variables 
+require('dotenv').config();
 const express = require('express');
+const { PrismaClient } = require('@prisma/client');
+const { PrismaPg } = require('@prisma/adapter-pg');
+const { Pool } = require('pg');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
+//establish driver connection
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
+
+// Middleware
 app.use(express.json());
-app.use(express.static('.')); 
+app.use(express.static('.'));
 
-//starter plant data
-let plantData = [
-    { name: "Tomato", type: "Vegetable", datePlanted: "2023-10-01", wateringSchedule: "Every 2 days", harvestYield: "10 bu/acre" },
-    { name: "Basil", type: "Herb", datePlanted: "2023-10-02", wateringSchedule: "Every 3 days", harvestYield: "5 bu/acre" }
-];
-
-//get the plant type and update the table and server
-app.get('/api/plants', (req, res) => {
-    res.json(plantData);
-});
-app.post('/api/plants', (req, res) => {
-    plantData.push(req.body);
-    res.status(201).json(req.body);
+// get records from db
+app.get('/api/plants', async (req, res) => {
+    try {
+        const plants = await prisma.plant.findMany({
+            orderBy: { id: 'asc' }
+        });
+        res.json(plants);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch plants from database" });
+    }
 });
 
-// Match the targetName with the frontend radio value selection
-app.put('/api/plants', (req, res) => {
+// add plants to db
+app.post('/api/plants', async (req, res) => {
+    const { name, type, datePlanted, wateringSchedule, harvestYield } = req.body;
+
+    if (!name || !type || !datePlanted || !wateringSchedule || !harvestYield) {
+        return res.status(400).json({ error: "All plant fields are required for creation." });
+    }
+
+    try {
+        const newPlant = await prisma.plant.create({
+            data: { name, type, datePlanted, wateringSchedule, harvestYield }
+        });
+        res.status(201).json(newPlant);
+    } catch (error) {
+        if (error.code === 'P2002') {
+            return res.status(400).json({ error: "A plant with this name already exists." });
+        }
+        res.status(500).json({ error: "Database transaction failed." });
+    }
+});
+
+// modify plant types
+app.put('/api/plants', async (req, res) => {
     const { targetName, updatedType } = req.body;
-    const plant = plantData.find(p => p.name.toLowerCase() === targetName.toLowerCase());
-    
-    if (plant) {
-        plant.type = updatedType;
-        return res.json({ message: "Plant updated", plant });
+
+    if (!targetName || !updatedType) {
+        return res.status(400).json({ error: "Missing required modification parameters." });
     }
-    res.status(404).json({ error: "Plant not found" });
+
+    try {
+        const updatedPlant = await prisma.plant.update({
+            where: { name: targetName },
+            data: { type: updatedType }
+        });
+        res.json({ message: "Plant updated", plant: updatedPlant });
+    } catch (error) {
+        if (error.code === 'P2025') {
+            return res.status(404).json({ error: "Plant not found on server" });
+        }
+        res.status(500).json({ error: "Internal Update Pipeline Failed" });
+    }
 });
 
-//remove the plant from the table and server
-app.delete('/api/plants', (req, res) => {
+// delete a plant
+app.delete('/api/plants', async (req, res) => {
     const { targetName } = req.body;
-    const initialLength = plantData.length;
 
-    plantData = plantData.filter(p => p.name.toLowerCase() !== targetName.toLowerCase());
-    
-    //check if any plant was removed
-    if (plantData.length === initialLength) {
-        return res.status(404).json({ error: "Plant not found" });
+    if (!targetName) {
+        return res.status(400).json({ error: "Target name must be provided." });
     }
-    res.json({ message: "Plant deleted" });
+
+    try {
+        await prisma.plant.delete({
+            where: { name: targetName }
+        });
+        res.json({ message: "Plant deleted successfully" });
+    } catch (error) {
+        if (error.code === 'P2025') {
+            return res.status(404).json({ error: "Plant not found on server" });
+        }
+        res.status(500).json({ error: "Internal Deletion Pipeline Failed" });
+    }
 });
 
-//catch any unmatched routes and return a 404 error
+// 404 Route Handler
 app.use((req, res) => {
     res.status(404).json({ error: "Route not found" });
 });
 
-//make sure the app is running and listening on the specified port, and log a message to the console when it starts successfully.
-app.listen(PORT, () => console.log('Agri-tech server running seamlessly on http://localhost:3000'));
+//listen on port 3000
+app.listen(PORT, () => console.log(`Agri-tech server running seamlessly on http://localhost:${PORT}`));
