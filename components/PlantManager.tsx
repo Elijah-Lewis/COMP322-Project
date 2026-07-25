@@ -199,13 +199,9 @@ export default function PlantManager() {
       />
 
       <main className="content">
-        <header className="hero">
+        <header className="hero hero-compact">
           <p className="eyebrow">Next.js migration</p>
           <h1>Manage plants with React state and route handlers</h1>
-          <p>
-            This UI loads database data on mount with useEffect, stores it in
-            local component state, and sends CRUD requests to /api/plants.
-          </p>
         </header>
 
         {error ? <div className="alert">{error}</div> : null}

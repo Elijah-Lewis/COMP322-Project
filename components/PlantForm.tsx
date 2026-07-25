@@ -21,12 +21,11 @@ export default function PlantForm({
 }: PlantFormProps) {
   return (
     <section className="panel">
-      <div className="panel-header">
+      <div className="panel-header panel-header-compact">
         <div>
           <p className="eyebrow">Create record</p>
           <h2>Add plant</h2>
         </div>
-        <p className="panel-note">This replaces the old prompt-driven add flow.</p>
       </div>
 
       <form className="form-grid" onSubmit={onSubmit}>
@@ -35,7 +34,7 @@ export default function PlantForm({
           <input
             type="text"
             value={values.name}
-            onChange={(event) => onChange('name', event.target.value)}
+            onChange={(event) => onChange("name", event.target.value)}
             placeholder="Tomato"
             required
           />
@@ -45,7 +44,7 @@ export default function PlantForm({
           <input
             type="text"
             value={values.type}
-            onChange={(event) => onChange('type', event.target.value)}
+            onChange={(event) => onChange("type", event.target.value)}
             placeholder="Vegetable"
             required
           />
@@ -55,7 +54,7 @@ export default function PlantForm({
           <input
             type="date"
             value={values.datePlanted}
-            onChange={(event) => onChange('datePlanted', event.target.value)}
+            onChange={(event) => onChange("datePlanted", event.target.value)}
             required
           />
         </label>
@@ -64,7 +63,9 @@ export default function PlantForm({
           <input
             type="text"
             value={values.wateringSchedule}
-            onChange={(event) => onChange('wateringSchedule', event.target.value)}
+            onChange={(event) =>
+              onChange("wateringSchedule", event.target.value)
+            }
             placeholder="Every 2 days"
             required
           />
@@ -74,14 +75,14 @@ export default function PlantForm({
           <input
             type="text"
             value={values.harvestYield}
-            onChange={(event) => onChange('harvestYield', event.target.value)}
+            onChange={(event) => onChange("harvestYield", event.target.value)}
             placeholder="10 bu/acre"
             required
           />
         </label>
 
         <button type="submit" disabled={submitting}>
-          {submitting ? 'Saving...' : 'Add plant'}
+          {submitting ? "Saving..." : "Add plant"}
         </button>
       </form>
     </section>

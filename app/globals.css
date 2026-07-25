@@ -108,6 +108,11 @@ button.danger:hover:not(:disabled) {
   align-self: flex-start;
 }
 
+.sidebar-heading {
+  display: grid;
+  gap: 0.2rem;
+}
+
 .sidebar h1,
 .hero h1,
 .panel h2 {
@@ -163,6 +168,11 @@ button.danger:hover:not(:disabled) {
   padding: 1.75rem;
 }
 
+.hero-compact {
+  padding-top: 1.35rem;
+  padding-bottom: 1.35rem;
+}
+
 .hero h1 {
   font-size: clamp(2rem, 3vw, 3.5rem);
   max-width: 12ch;
@@ -196,6 +206,11 @@ button.danger:hover:not(:disabled) {
   gap: 1rem;
   align-items: flex-start;
   margin-bottom: 1rem;
+}
+
+.panel-header-compact {
+  justify-content: flex-start;
+  margin-bottom: 0.75rem;
 }
 
 .panel-header h2 {
