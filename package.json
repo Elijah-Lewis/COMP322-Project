@@ -4,7 +4,9 @@
   "description": "",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "prisma generate",
     "build": "next build",
+    "postinstall": "prisma generate",
     "start": "next start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
