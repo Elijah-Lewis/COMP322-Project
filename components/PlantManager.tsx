@@ -46,6 +46,7 @@ export default function PlantManager() {
     () => plants.find((plant) => plant.name === selectedPlantName) ?? null,
     [plants, selectedPlantName],
   );
+  const isInitialLoading = loading && plants.length === 0;
 
   useEffect(() => {
     void loadPlants();
@@ -198,44 +199,65 @@ export default function PlantManager() {
       />
 
       <main className="content">
-        <header className="hero">
+        <header className="hero hero-compact">
           <p className="eyebrow">Next.js migration</p>
           <h1>Manage plants with React state and route handlers</h1>
-          <p>
-            This UI loads database data on mount with useEffect, stores it in
-            local component state, and sends CRUD requests to /api/plants.
-          </p>
         </header>
 
         {error ? <div className="alert">{error}</div> : null}
-        {loading ? (
-          <div className="alert muted">Loading plants from the database...</div>
-        ) : null}
 
-        <div className="content-grid">
-          <div className="stack">
-            <PlantForm
-              values={newPlant}
-              onChange={updateNewPlant}
-              onSubmit={handleAddPlant}
-              submitting={saving}
-            />
-            <PlantUpdateForm
+        {isInitialLoading ? (
+          <div className="content-grid" aria-busy="true">
+            <section className="panel skeleton-panel">
+              <div className="skeleton-line skeleton-kicker" />
+              <div className="skeleton-line skeleton-heading" />
+              <div className="skeleton-grid">
+                <div className="skeleton-line" />
+                <div className="skeleton-line" />
+                <div className="skeleton-line" />
+                <div className="skeleton-line" />
+                <div className="skeleton-line" />
+              </div>
+            </section>
+
+            <section className="panel skeleton-panel">
+              <div className="skeleton-line skeleton-kicker" />
+              <div className="skeleton-line skeleton-heading" />
+              <div className="skeleton-table">
+                <div className="skeleton-line" />
+                <div className="skeleton-line" />
+                <div className="skeleton-line" />
+                <div className="skeleton-line" />
+                <div className="skeleton-line" />
+              </div>
+            </section>
+          </div>
+        ) : (
+          <div className="content-grid">
+            <div className="stack">
+              <PlantForm
+                values={newPlant}
+                onChange={updateNewPlant}
+                onSubmit={handleAddPlant}
+                submitting={saving}
+              />
+              <PlantUpdateForm
+                selectedPlantName={selectedPlantName}
+                updatedType={updatedType}
+                onUpdatedTypeChange={setUpdatedType}
+                onSubmit={handleUpdatePlant}
+                onDelete={handleDeletePlant}
+                busy={saving}
+              />
+            </div>
+
+            <PlantTable
+              plants={plants}
               selectedPlantName={selectedPlantName}
-              updatedType={updatedType}
-              onUpdatedTypeChange={setUpdatedType}
-              onSubmit={handleUpdatePlant}
-              onDelete={handleDeletePlant}
-              busy={saving}
+              onSelectPlant={setSelectedPlantName}
             />
           </div>
-
-          <PlantTable
-            plants={plants}
-            selectedPlantName={selectedPlantName}
-            onSelectPlant={setSelectedPlantName}
-          />
-        </div>
+        )}
       </main>
     </div>
   );

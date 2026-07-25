@@ -15,13 +15,9 @@ export default function Sidebar({
 }: SidebarProps) {
   return (
     <aside className="sidebar">
-      <div>
+      <div className="sidebar-heading">
         <p className="eyebrow">Agri-tech dashboard</p>
         <h1>Plant manager</h1>
-        <p className="sidebar-copy">
-          React components now handle the UI while Next.js route handlers manage
-          the database CRUD flow.
-        </p>
       </div>
 
       <div className="sidebar-card">
@@ -31,12 +27,12 @@ export default function Sidebar({
 
       <div className="sidebar-card">
         <span className="label">Selected plant</span>
-        <strong>{selectedPlantName ?? 'None selected'}</strong>
+        <strong>{selectedPlantName ?? "None selected"}</strong>
       </div>
 
       <div className="sidebar-actions">
         <button type="button" onClick={onRefresh} disabled={loading}>
-          {loading ? 'Refreshing...' : 'Refresh data'}
+          {loading ? "Refreshing..." : "Refresh data"}
         </button>
         <button type="button" className="secondary" onClick={onClearSelection}>
           Clear selection
